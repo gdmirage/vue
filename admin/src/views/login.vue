@@ -12,8 +12,8 @@
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
-      <el-form-item prop="code">
-        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">
+      <el-form-item prop="captcha">
+        <el-input v-model="loginForm.captcha" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">
           <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
         </el-input>
         <div class="login-code">
@@ -52,13 +52,13 @@ export default {
         username: 'admin',
         password: '123456',
         rememberMe: false,
-        code: '',
+        captcha: '',
         uuid: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', message: '用户名不能为空' }],
         password: [{ required: true, trigger: 'blur', message: '密码不能为空' }],
-        code: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
+        captcha: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
       },
       loading: false,
       redirect: undefined
@@ -94,7 +94,7 @@ export default {
         username: username === undefined ? this.loginForm.username : username,
         password: password,
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
-        code: ''
+        captcha: ''
       }
     },
     handleLogin() {
@@ -103,7 +103,7 @@ export default {
           username: this.loginForm.username,
           password: this.loginForm.password,
           rememberMe: this.loginForm.rememberMe,
-          code: this.loginForm.code,
+          captcha: this.loginForm.captcha,
           uuid: this.loginForm.uuid
         }
         if (user.password !== this.cookiePass) {
@@ -120,6 +120,8 @@ export default {
             Cookies.remove('password')
             Cookies.remove('rememberMe')
           }
+
+          // console.log(user)
           this.$store.dispatch('Login', user).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })

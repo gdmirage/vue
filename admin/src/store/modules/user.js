@@ -31,11 +31,12 @@ const user = {
     Login({ commit }, userInfo) {
       const username = userInfo.username
       const password = decrypt(userInfo.password)
-      const code = userInfo.code
+      const captcha = userInfo.captcha
       const uuid = userInfo.uuid
       const rememberMe = userInfo.rememberMe
+      console.log(captcha)
       return new Promise((resolve, reject) => {
-        login(username, password, code, uuid).then(res => {
+        login(username, password, captcha, uuid).then(res => {
           setToken(res.token, rememberMe)
           commit('SET_TOKEN', res.token)
           setUserInfo(res.user, commit)
