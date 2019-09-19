@@ -34,9 +34,9 @@ const user = {
       const captcha = userInfo.captcha
       const uuid = userInfo.uuid
       const rememberMe = userInfo.rememberMe
-      console.log(captcha)
       return new Promise((resolve, reject) => {
         login(username, password, captcha, uuid).then(res => {
+          console.log(res)
           setToken(res.token, rememberMe)
           commit('SET_TOKEN', res.token)
           setUserInfo(res.user, commit)
