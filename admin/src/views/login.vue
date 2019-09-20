@@ -101,7 +101,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         const user = {
           username: this.loginForm.username,
-          password: this.loginForm.password,
+          password: this.$md5(this.loginForm.password),
           rememberMe: this.loginForm.rememberMe,
           captcha: this.loginForm.captcha,
           uuid: this.loginForm.uuid
