@@ -5,7 +5,7 @@ import { decrypt } from '@/utils/rsaEncrypt'
 const user = {
   state: {
     token: getToken(),
-    user: {},
+    loginUser: {},
     roles: [],
     // 第一次加载菜单时用到
     loadMenus: false
@@ -16,7 +16,7 @@ const user = {
       state.token = token
     },
     SET_USER: (state, user) => {
-      state.user = user
+      state.loginUser = user
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -36,10 +36,10 @@ const user = {
       const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
         login(username, password, captcha, uuid).then(res => {
-          console.log(res)
-          setToken(res.token, rememberMe)
-          commit('SET_TOKEN', res.token)
-          setUserInfo(res.user, commit)
+          var data = res.data
+          setToken(data.token, rememberMe)
+          commit('SET_TOKEN', data.token)
+          setUserInfo(data.loginUser, commit)
           // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
           commit('SET_LOAD_MENUS', true)
           resolve()
