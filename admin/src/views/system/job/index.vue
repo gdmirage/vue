@@ -36,6 +36,35 @@
           {{ scope.row.sort }}
         </template>
       </el-table-column>
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <div v-for="item in dicts" :key="item.id">
+            <el-tag v-if="scope.row.enabled.toString() === item.value" :type="scope.row.enabled ? '' : 'info'">{{ item.label }}</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建日期">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="130px" align="center">
+        <template slot-scope="scope">
+          <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-popover
+            v-permission="['ADMIN','USERJOB_ALL','USERJOB_DELETE']"
+            :ref="scope.row.id"
+            placement="top"
+            width="180">
+            <p>确定删除本条数据吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
+            </div>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
+          </el-popover>
+        </template>
+      </el-table-column>
     </el-table>
     <!--分页组件-->
   </div>
@@ -52,11 +81,14 @@
         query: {},
         loading: false,
         data: [
-          { name: '客服部',
+          {
+            id: 1,
+            name: '客服部',
             dept: {
               name: '华南'
             },
-            sort: 1
+            sort: 1,
+            createTime: '2019-10-08 12:12:12'
           }
         ]
 
@@ -71,6 +103,9 @@
       },
       toQuery() {
         console.log('toQuery')
+      },
+      edit(data) {
+        console.log(data)
       }
     }
   }
