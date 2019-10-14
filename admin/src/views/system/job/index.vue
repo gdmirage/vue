@@ -69,7 +69,7 @@
     <!--分页组件-->
     <el-pagination
       :total="total"
-      :current-page="page + 1"
+      :current-page="page"
       style="margin-top: 8px;"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChange"
@@ -103,7 +103,11 @@
       beforeInit() {
         this.url = 'job/page'
         const sort = 'sort,asc'
-        this.params = { page: this.page, size: this.size, sort: sort }
+        this.params = {
+          pageNum: this.page,
+          pageSize: this.size,
+          sort: sort
+        }
         const query = this.query
         const value = query.value
         const enabled = query.enabled
@@ -114,17 +118,8 @@
       add() {
         console.log('add')
       },
-      toQuery() {
-        console.log('toQuery')
-      },
       edit(data) {
         console.log(data)
-      },
-      sizeChange() {
-        console.log('sizeChange')
-      },
-      pageChange() {
-        console.log('pageChange')
       }
     }
   }

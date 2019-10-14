@@ -3,7 +3,7 @@ import { initData } from '@/api/data'
 export default {
   data() {
     return {
-      loading: true, data: [], page: 0, size: 10, total: 0, url: '', params: {}, query: {}, time: 170, isAdd: false
+      loading: true, data: [], page: 1, size: 10, total: 0, url: '', params: {}, query: {}, time: 170, isAdd: false
     }
   },
   methods: {
@@ -14,10 +14,6 @@ export default {
       return new Promise((resolve, reject) => {
         this.loading = true
         initData(this.url, this.params).then(res => {
-          // console.log(res)
-          // debugger
-          // this.total = res.totalElements
-          // this.data = res.content
           this.total = res.data.total
           this.data = res.data.list
           setTimeout(() => {
@@ -34,11 +30,11 @@ export default {
       return true
     },
     pageChange(e) {
-      this.page = e - 1
+      this.page = e
       this.init()
     },
     sizeChange(e) {
-      this.page = 0
+      this.page = 1
       this.size = e
       this.init()
     },
@@ -52,7 +48,7 @@ export default {
       }
     },
     toQuery() {
-      this.page = 0
+      this.page = 1
       this.init()
     }
   }
