@@ -67,36 +67,49 @@
       </el-table-column>
     </el-table>
     <!--分页组件-->
+    <el-pagination
+      :total="total"
+      :current-page="page + 1"
+      style="margin-top: 8px;"
+      layout="total, prev, pager, next, sizes"
+      @size-change="sizeChange"
+      @current-change="pageChange"/>
   </div>
 </template>
 
 <script>
+  import initData from '@/mixins/initData'
+  import initDict from '@/mixins/initDict'
   export default {
+    mixins: [initData, initDict],
     data() {
       return {
+        delLoading: false,
         enabledTypeOptions: [
           { key: 'true', display_name: '正常' },
           { key: 'false', display_name: '禁用' }
         ],
-        query: {},
-        loading: false,
-        data: [
-          {
-            id: 1,
-            name: '客服部',
-            dept: {
-              name: '华南'
-            },
-            sort: 1,
-            createTime: '2019-10-08 12:12:12'
-          }
-        ]
-
+        query: {}
       }
+    },
+    created() {
+      this.$nextTick(() => {
+        this.init()
+        // 加载数据字典
+        this.getDict('job_status')
+      })
     },
     methods: {
       beforeInit() {
+        this.url = 'job/page'
+        const sort = 'sort,asc'
+        this.params = { page: this.page, size: this.size, sort: sort }
         const query = this.query
+        const value = query.value
+        const enabled = query.enabled
+        if (value) { this.params['name'] = value }
+        if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
+        return true
       },
       add() {
         console.log('add')
@@ -106,6 +119,12 @@
       },
       edit(data) {
         console.log(data)
+      },
+      sizeChange() {
+        console.log('sizeChange')
+      },
+      pageChange() {
+        console.log('pageChange')
       }
     }
   }
