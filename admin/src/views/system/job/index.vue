@@ -52,7 +52,6 @@
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
-            v-permission="['ADMIN','USERJOB_ALL','USERJOB_DELETE']"
             :ref="scope.row.id"
             placement="top"
             width="180">
@@ -80,6 +79,7 @@
 <script>
   import initData from '@/mixins/initData'
   import initDict from '@/mixins/initDict'
+  import { del } from '@/api/job'
   export default {
     mixins: [initData, initDict],
     data() {
@@ -117,6 +117,25 @@
       },
       add() {
         console.log('add')
+      },
+      subDelete(id) {
+        this.delLoading = true
+        console.log('delete' + id)
+        del(id).then(res => {
+          this.delLoading = false
+          this.$refs[id].doClose()
+          this.dleChangePage()
+          this.init()
+          this.$notify({
+            title: '删除成功',
+            type: 'success',
+            duration: 2500
+          })
+        }).catch(err => {
+          this.delLoading = false
+          this.$refs[id].doClose()
+          console.log(err.response.data.message)
+        })
       },
       edit(data) {
         console.log(data)

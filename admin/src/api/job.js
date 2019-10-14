@@ -23,8 +23,9 @@ export function add(data) {
 
 export function del(id) {
   return request({
-    url: 'api/job/' + id,
-    method: 'delete'
+    url: 'job/delete',
+    data: id,
+    method: 'post'
   })
 }
 
