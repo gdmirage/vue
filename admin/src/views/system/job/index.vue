@@ -19,6 +19,7 @@
       </div>
     </div>
     <!--表单组件-->
+    <eForm ref="form" :is-add="isAdd" :dicts="dicts"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <el-table-column label="名称">
@@ -80,7 +81,10 @@
   import initData from '@/mixins/initData'
   import initDict from '@/mixins/initDict'
   import { del } from '@/api/job'
+  import eForm from './form'
   export default {
+    /**初始化组件**/
+    components: { eForm },
     mixins: [initData, initDict],
     data() {
       return {
@@ -116,11 +120,14 @@
         return true
       },
       add() {
-        console.log('add')
+        this.isAdd = true
+        console.log(this.dicts)
+        console.log(this.$refs.form)
+//        this.$refs.form.getDepts()
+        this.$refs.form.dialog = true
       },
       subDelete(id) {
         this.delLoading = true
-        console.log('delete' + id)
         del(id).then(res => {
           this.delLoading = false
           this.$refs[id].doClose()
