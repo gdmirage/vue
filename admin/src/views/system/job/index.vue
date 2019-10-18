@@ -121,9 +121,7 @@
       },
       add() {
         this.isAdd = true
-        console.log(this.dicts)
-        console.log(this.$refs.form)
-//        this.$refs.form.getDepts()
+        this.$refs.form.getDepts()
         this.$refs.form.dialog = true
       },
       subDelete(id) {
@@ -145,7 +143,17 @@
         })
       },
       edit(data) {
-        console.log(data)
+        this.isAdd = false
+        const _this = this.$refs.form
+        _this.getDepts()
+        _this.form = {
+          id: data.id,
+          name: data.name,
+          sort: data.sort,
+          enabled: data.enabled.toString(),
+          deptId: data.deptId
+        }
+        _this.dialog = true
       }
     }
   }

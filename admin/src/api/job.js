@@ -15,7 +15,7 @@ export function getAllJob(deptId) {
 
 export function add(data) {
   return request({
-    url: 'api/job',
+    url: 'job/add',
     method: 'post',
     data
   })
@@ -31,8 +31,8 @@ export function del(id) {
 
 export function edit(data) {
   return request({
-    url: 'api/job',
-    method: 'put',
+    url: 'job/edit',
+    method: 'post',
     data
   })
 }

@@ -1,5 +1,11 @@
 <template>
-  <el-dialog :append-to-body="true" :visible.sync="dialog" :title="isAdd ? '新增岗位' : '编辑岗位'" width="500px">
+  <el-dialog
+    :close-on-click-modal="false"
+    :append-to-body="true"
+    :visible.sync="dialog"
+    :title="isAdd ? '新增岗位' : '编辑岗位'"
+    width="500px"
+    @close="cancel">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" style="width: 370px;"/>
@@ -11,7 +17,7 @@
         <el-radio v-for="item in dicts" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
       </el-form-item>
       <el-form-item label="所属部门">
-        <treeselect v-model="deptId" :options="depts" style="width: 370px" placeholder="选择部门" />
+        <treeselect v-model="form.deptId" :options="depts" style="width: 370px" placeholder="选择部门" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -40,18 +46,18 @@ export default {
   },
   data() {
     return {
-      loading: false, dialog: false, depts: [], deptId: null,
+      loading: false, dialog: false, depts: [],
       form: {
         id: '',
         name: '',
         sort: 999,
         enabled: 'true',
-        createTime: '',
-        dept: { id: '' }
+        deptId: null
       },
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: '请输入名称', trigger: 'blur' },
+          { max: 50, message: '长度不能超过' + 50, trigger: 'blur' }
         ],
         sort: [
           { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
@@ -64,10 +70,9 @@ export default {
       this.resetForm()
     },
     doSubmit() {
-      this.form.dept.id = this.deptId
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (this.deptId === null || this.deptId === undefined) {
+          if (this.form.deptId === null || this.form.deptId === undefined) {
             this.$message({
               message: '所属部门不能为空',
               type: 'warning'
@@ -76,7 +81,9 @@ export default {
             this.loading = true
             if (this.isAdd) {
               this.doAdd()
-            } else this.doEdit()
+            } else {
+              this.doEdit()
+            }
           }
         }
       })
@@ -114,19 +121,17 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.deptId = null
       this.form = {
         id: '',
         name: '',
         sort: 999,
         enabled: 'true',
-        createTime: '',
-        dept: { id: '' }
+        deptId: null
       }
     },
     getDepts() {
       getDepts({ enabled: true }).then(res => {
-        this.depts = res.content
+        this.depts = res.data
       })
     }
   }
