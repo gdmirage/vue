@@ -40,7 +40,7 @@
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="checkPermission(['ADMIN','DEPT_ALL','DEPT_EDIT','DEPT_DELETE'])" label="操作" width="130px" align="center">
@@ -67,14 +67,15 @@
 <script>
 import treeTable from '@/components/TreeTable'
 import checkPermission from '@/utils/permission'
-import initData from '@/mixins/initData'
+// import initData from '@/mixins/initData'
 import initDict from '@/mixins/initDict'
 import { del } from '@/api/dept'
 import { parseTime } from '@/utils/index'
 import eForm from './form'
+import axios from 'axios'
 export default {
   components: { eForm, treeTable },
-  mixins: [initData, initDict],
+  mixins: [initDict],
   data() {
     return {
       columns: [
@@ -87,7 +88,11 @@ export default {
         { key: 'true', display_name: '正常' },
         { key: 'false', display_name: '禁用' }
       ],
-      delLoading: false, expand: true
+      delLoading: false, expand: true,
+      data: [],
+      query: {},
+      isAdd: false,
+      loading: false
     }
   },
   created() {
@@ -100,17 +105,29 @@ export default {
   methods: {
     parseTime,
     checkPermission,
-    beforeInit() {
-      this.url = 'api/dept'
-      const sort = 'id,desc'
-      this.params = { page: this.page, size: this.size, sort: sort }
-      const query = this.query
-      const value = query.value
-      const enabled = query.enabled
-      if (value) { this.params['name'] = value }
-      if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
-      return true
+
+    init() {
+      console.log(this.data + '/dept/deptTree')
+      axios.post(process.env.BASE_API + '/dept/deptTree', this.query).then((res) => {
+        console.log(this.data)
+        console.log(res.data.data)
+        this.data = res.data.data
+      }).then((e) => {
+        console.log(e)
+      })
     },
+
+    // beforeInit() {
+    //   this.url = 'api/dept'
+    //   const sort = 'id,desc'
+    //   this.params = { page: this.page, size: this.size, sort: sort }
+    //   const query = this.query
+    //   const value = query.value
+    //   const enabled = query.enabled
+    //   if (value) { this.params['name'] = value }
+    //   if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
+    //   return true
+    // },
     subDelete(id) {
       this.delLoading = true
       del(id).then(res => {
@@ -150,6 +167,9 @@ export default {
         enabled: data.enabled.toString()
       }
       _this.dialog = true
+    },
+    toQuery() {
+      console.log('toQuery')
     }
   }
 }
