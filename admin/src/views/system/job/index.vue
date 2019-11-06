@@ -9,7 +9,7 @@
       </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
-      <div style="display: inline-block;margin: 0px 2px;">
+      <div v-permission="['ADMIN','USERJOB_ALL','USERJOB_CREATE']" style="display: inline-block;margin: 0px 2px;">
         <el-button
           class="filter-item"
           size="mini"
@@ -49,7 +49,7 @@
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="130px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','USERJOB_ALL','USERJOB_EDIT','USERJOB_DELETE'])" label="操作" width="130px" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
@@ -82,6 +82,7 @@
   import initDict from '@/mixins/initDict'
   import { del } from '@/api/job'
   import eForm from './form'
+  import checkPermission from '@/utils/permission'
   export default {
     /**初始化组件**/
     components: { eForm },
@@ -104,6 +105,7 @@
       })
     },
     methods: {
+      checkPermission,
       beforeInit() {
         this.url = 'job/page'
         const sort = 'sort,asc'
