@@ -3,7 +3,7 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入部门名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.name" clearable placeholder="输入部门名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
       <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
         <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
       </el-select>
@@ -107,10 +107,11 @@ export default {
     checkPermission,
 
     init() {
-      console.log(this.data + '/dept/deptTree')
-      axios.post(process.env.BASE_API + '/dept/deptTree', this.query).then((res) => {
-        console.log(this.data)
-        console.log(res.data.data)
+      const query = this.query
+      const data = {}
+      data['name'] = query.name
+      data['enabled'] = query.enabled
+      axios.post(process.env.BASE_API + '/dept/deptTree', data).then((res) => {
         this.data = res.data.data
       }).then((e) => {
         console.log(e)
@@ -163,13 +164,12 @@ export default {
         id: data.id,
         name: data.name,
         pid: data.pid,
-        createTime: data.createTime,
         enabled: data.enabled.toString()
       }
       _this.dialog = true
     },
     toQuery() {
-      console.log('toQuery')
+      this.init()
     }
   }
 }

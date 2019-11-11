@@ -9,8 +9,9 @@ export function getDepts(params) {
 }
 
 export function add(data) {
+  console.log(data.name)
   return request({
-    url: 'api/dept',
+    url: 'dept/add',
     method: 'post',
     data
   })
@@ -18,15 +19,16 @@ export function add(data) {
 
 export function del(id) {
   return request({
-    url: 'api/dept/' + id,
-    method: 'delete'
+    url: 'dept/delete',
+    method: 'post',
+    data: id
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/dept',
-    method: 'put',
+    url: 'dept/edit',
+    method: 'post',
     data
   })
 }

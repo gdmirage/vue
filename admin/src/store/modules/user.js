@@ -36,7 +36,6 @@ const user = {
       const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
         login(username, password, captcha, uuid).then(res => {
-          debugger
           var data = res.data
           setToken(data.token, rememberMe)
           commit('SET_TOKEN', data.token)
