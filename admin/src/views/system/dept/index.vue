@@ -23,7 +23,7 @@
           size="mini"
           type="warning"
           icon="el-icon-more"
-          @click="changeExpand">{{ $parent.expand ? '折叠' : '展开' }}</el-button>
+          @click="changeExpand">{{ expand ? '折叠' : '展开' }}</el-button>
         <eForm ref="form" :is-add="true" :dicts="dicts"/>
       </div>
     </div>
@@ -113,7 +113,9 @@ export default {
       data['enabled'] = query.enabled
       axios.post(process.env.BASE_API + '/dept/deptTree', data).then((res) => {
         this.data = res.data.data
-      }).then((e) => {
+      }).then(() => {
+        console.log('then execute')
+      }).catch((e) => {
         console.log(e)
       })
     },

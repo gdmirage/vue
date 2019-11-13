@@ -9,7 +9,6 @@ export function getDepts(params) {
 }
 
 export function add(data) {
-  console.log(data.name)
   return request({
     url: 'dept/add',
     method: 'post',

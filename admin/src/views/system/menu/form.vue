@@ -20,14 +20,14 @@
       <el-form-item label="菜单排序" prop="sort">
         <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 460px;"/>
       </el-form-item>
-      <el-form-item label="内部菜单" prop="iframe">
-        <el-radio v-model="form.iframe" label="false">是</el-radio>
-        <el-radio v-model="form.iframe" label="true" >否</el-radio>
+      <el-form-item label="内部菜单" prop="iFrame">
+        <el-radio v-model="form.iFrame" label="false">是</el-radio>
+        <el-radio v-model="form.iFrame" label="true" >否</el-radio>
       </el-form-item>
       <el-form-item label="链接地址">
         <el-input v-model="form.path" placeholder="菜单路径" style="width: 460px;"/>
       </el-form-item>
-      <el-form-item v-if="form.iframe === 'false'" label="组件路径">
+      <el-form-item v-if="form.iFrame === 'false'" label="组件路径">
         <el-input v-model="form.component" placeholder="菜单路径" style="width: 460px;"/>
       </el-form-item>
       <el-form-item label="上级类目">
@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       loading: false, dialog: false, menus: [],
-      form: { name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' },
+      form: { name: '', sort: 999, path: '', component: '', iFrame: 'false', roles: [], pid: 0, icon: '' },
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
@@ -65,7 +65,7 @@ export default {
         sort: [
           { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
         ],
-        iframe: [
+        iFrame: [
           { required: true, message: '请选择菜单类型', trigger: 'blur' }
         ]
       }
@@ -120,7 +120,7 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = { name: '', sort: 999, path: '', component: '', iframe: 'false', roles: [], pid: 0, icon: '' }
+      this.form = { name: '', sort: 999, path: '', component: '', iFrame: 'false', roles: [], pid: 0, icon: '' }
     },
     selected(name) {
       this.form.icon = name
@@ -131,6 +131,7 @@ export default {
         const menu = { id: 0, label: '顶级类目', children: [] }
         menu.children = res
         this.menus.push(menu)
+        console.log(this.menus)
       })
     }
   }

@@ -3,7 +3,7 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.name" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div v-permission="['ADMIN','MENU_ALL','MENU_CREATE']" style="display: inline-block;margin: 0px 2px;">
@@ -20,7 +20,7 @@
           size="mini"
           type="warning"
           icon="el-icon-more"
-          @click="changExpand">{{ $parent.expand ? '折叠' : '展开' }}</el-button>
+          @click="changExpand">{{ expand ? '折叠' : '展开' }}</el-button>
         <eForm ref="form" :is-add="true"/>
       </div>
     </div>
@@ -40,15 +40,15 @@
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="path" label="链接地址"/>
       <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径"/>
-      <el-table-column prop="iframe" width="100px" label="内部菜单">
+      <el-table-column prop="iFrame" width="100px" label="内部菜单">
         <template slot-scope="scope">
-          <span v-if="!scope.row.iframe">是</span>
+          <span v-if="!scope.row.iFrame">是</span>
           <span v-else>否</span>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="checkPermission(['ADMIN','MENU_ALL','MENU_EDIT','MENU_DELETE'])" label="操作" width="130px" align="center">
@@ -75,13 +75,13 @@
 <script>
 import checkPermission from '@/utils/permission' // 权限判断函数
 import treeTable from '@/components/TreeTable'
-import initData from '@/mixins/initData'
+// import initData from '@/mixins/initData'
 import { del } from '@/api/menu'
-import { parseTime } from '@/utils/index'
 import eForm from './form'
+import axios from 'axios'
 export default {
   components: { treeTable, eForm },
-  mixins: [initData],
+  // mixins: [initData],
   data() {
     return {
       columns: [
@@ -90,7 +90,12 @@ export default {
           value: 'name'
         }
       ],
-      delLoading: false, expand: true
+      delLoading: false,
+      data: [],
+      expand: true,
+      query: {},
+      isAdd: false,
+      loading: false
     }
   },
   created() {
@@ -99,17 +104,32 @@ export default {
     })
   },
   methods: {
-    parseTime,
     checkPermission,
-    beforeInit() {
-      this.url = 'api/menus'
-      const sort = 'id,desc'
+
+    init() {
+      console.log('init---->')
       const query = this.query
-      const value = query.value
-      this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['name'] = value }
-      return true
+      const data = {}
+      data['name'] = query.name
+      data['enabled'] = query.enabled
+      axios.post(process.env.BASE_API + '/menu/getMenuList', data).then((res) => {
+        this.data = res.data.data
+      }).then(() => {
+        console.log('then execute')
+      }).catch((e) => {
+        console.log(e)
+      })
     },
+
+    // beforeInit() {
+    //   this.url = 'api/menus'
+    //   const sort = 'id,desc'
+    //   const query = this.query
+    //   const value = query.value
+    //   this.params = { page: this.page, size: this.size, sort: sort }
+    //   if (value) { this.params['name'] = value }
+    //   return true
+    // },
     subDelete(id) {
       this.delLoading = true
       del(id).then(res => {
@@ -136,11 +156,15 @@ export default {
       this.isAdd = false
       const _this = this.$refs.form
       _this.getMenus()
-      _this.form = { id: data.id, component: data.component, name: data.name, sort: data.sort, pid: data.pid, path: data.path, iframe: data.iframe.toString(), roles: [], icon: data.icon }
+      console.log(data)
+      _this.form = { id: data.id, component: data.component, name: data.name, sort: data.sort, pid: data.pid, path: data.path, iFrame: data.iFrame.toString(), roles: [], icon: data.icon }
       _this.dialog = true
     },
     changExpand() {
       this.expand = !this.expand
+      this.init()
+    },
+    toQuery() {
       this.init()
     }
   }
