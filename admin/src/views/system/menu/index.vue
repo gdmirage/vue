@@ -107,7 +107,6 @@ export default {
     checkPermission,
 
     init() {
-      console.log('init---->')
       const query = this.query
       const data = {}
       data['name'] = query.name

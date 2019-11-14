@@ -99,7 +99,7 @@ export default {
       getPermissionTree().then(res => {
         this.permissions = []
         const permission = { id: 0, label: '顶级类目', children: [] }
-        permission.children = res
+        permission.children = res.data
         this.permissions.push(permission)
       })
     }
