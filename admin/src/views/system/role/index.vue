@@ -5,7 +5,7 @@
     <!--工具栏-->
     <div class="head-container">
       <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+      <el-input v-model="query.name" clearable placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <div v-permission="['ADMIN','ROLES_ALL','ROLES_CREATE']" style="display: inline-block;margin: 0px 2px;">
@@ -37,7 +37,7 @@
             <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述"/>
             <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
               <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.createTime) }}</span>
+                <span>{{ scope.row.createTime }}</span>
               </template>
             </el-table-column>
             <el-table-column v-if="checkPermission(['ADMIN','ROLES_ALL','ROLES_EDIT','ROLES_DELETE'])" label="操作" width="130px" align="center">
@@ -129,7 +129,6 @@ import initData from '@/mixins/initData'
 import { del } from '@/api/role'
 import { getPermissionTree } from '@/api/permission'
 import { getMenusTree } from '@/api/menu'
-import { parseTime } from '@/utils/index'
 import eForm from './form'
 import { editPermission, editMenu, get } from '@/api/role'
 export default {
@@ -153,16 +152,15 @@ export default {
     })
   },
   methods: {
-    parseTime,
     checkPermission,
     beforeInit() {
       this.$refs.permission.setCheckedKeys([])
       this.$refs.menu.setCheckedKeys([])
       this.showButton = false
-      this.url = 'api/roles'
+      this.url = 'role/page'
       const sort = 'level,asc'
       const query = this.query
-      const value = query.value
+      const value = query.name
       this.params = { page: this.page, size: this.size, sort: sort }
       if (value) { this.params['name'] = value }
       return true
@@ -187,7 +185,7 @@ export default {
     },
     getPermissions() {
       getPermissionTree().then(res => {
-        this.permissions = res
+        this.permissions = res.data
       })
     },
     getMenus() {

@@ -10,7 +10,7 @@ export function getAll() {
 
 export function add(data) {
   return request({
-    url: 'api/roles',
+    url: 'role/add',
     method: 'post',
     data
   })
@@ -18,8 +18,9 @@ export function add(data) {
 
 export function get(id) {
   return request({
-    url: 'api/roles/' + id,
-    method: 'get'
+    url: 'role/getById',
+    method: 'get',
+    data: id
   })
 }
 
@@ -32,15 +33,16 @@ export function getLevel() {
 
 export function del(id) {
   return request({
-    url: 'api/roles/' + id,
-    method: 'delete'
+    url: 'role/delete',
+    method: 'post',
+    data: id
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/roles',
-    method: 'put',
+    url: 'role/edit',
+    method: 'post',
     data
   })
 }

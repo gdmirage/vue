@@ -123,7 +123,7 @@ export default {
     },
     getDepts() {
       getDepts({ enabled: true }).then(res => {
-        this.depts = res.content
+        this.depts = res.data
       })
     },
     changeScope() {
