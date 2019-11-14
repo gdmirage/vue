@@ -49,16 +49,16 @@ export function edit(data) {
 
 export function editPermission(data) {
   return request({
-    url: 'api/roles/permission',
-    method: 'put',
+    url: 'role/permissions',
+    method: 'post',
     data
   })
 }
 
 export function editMenu(data) {
   return request({
-    url: 'api/roles/menu',
-    method: 'put',
+    url: 'role/menus',
+    method: 'post',
     data
   })
 }

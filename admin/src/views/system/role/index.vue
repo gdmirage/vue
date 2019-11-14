@@ -227,10 +227,10 @@ export default {
     },
     savePermission() {
       this.permissionLoading = true
-      const role = { id: this.currentId, permissions: [] }
+      const role = { roleId: this.currentId, permissionIds: [] }
       this.$refs.permission.getCheckedKeys().forEach(function(data, index) {
-        const permission = { id: data }
-        role.permissions.push(permission)
+        const permissionId = data
+        role.permissionIds.push(permissionId)
       })
       editPermission(role).then(res => {
         this.$notify({
@@ -247,16 +247,16 @@ export default {
     },
     saveMenu() {
       this.menuLoading = true
-      const role = { id: this.currentId, menus: [] }
+      const role = { roleId: this.currentId, menuIds: [] }
       // 得到半选的父节点数据，保存起来
       this.$refs.menu.getHalfCheckedNodes().forEach(function(data, index) {
-        const permission = { id: data.id }
-        role.menus.push(permission)
+        const menuId = data
+        role.menuIds.push(menuId)
       })
       // 得到已选中的 key 值
       this.$refs.menu.getCheckedKeys().forEach(function(data, index) {
-        const permission = { id: data }
-        role.menus.push(permission)
+        const menuId = data
+        role.menuIds.push(menuId)
       })
       editMenu(role).then(res => {
         this.$notify({
