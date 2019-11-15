@@ -74,7 +74,8 @@ export default {
       }
     }
     return {
-      dialog: false, loading: false, form: { username: '', email: '', enabled: 'false', roles: [], job: { id: '' }, dept: { id: '' }, phone: null },
+      dialog: false, loading: false,
+      form: { username: null, email: null, enabled: 'false', roleIds: [], jobId: null, deptId: null, phone: null },
       roleIds: [], roles: [], depts: [], deptId: null, jobId: null, jobs: [], style: 'width: 184px', level: 3,
       rules: {
         username: [
@@ -107,8 +108,8 @@ export default {
       this.resetForm()
     },
     doSubmit() {
-      this.form.dept.id = this.deptId
-      this.form.job.id = this.jobId
+      this.form.deptId = this.deptId
+      this.form.jobId = this.jobId
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.deptId === null || this.deptId === undefined) {
@@ -128,11 +129,11 @@ export default {
             })
           } else {
             this.loading = true
-            this.form.roles = []
+            this.form.roleIds = []
             const _this = this
             this.roleIds.forEach(function(data, index) {
-              const role = { id: data }
-              _this.form.roles.push(role)
+              const role = data
+              _this.form.roleIds.push(role)
             })
             if (this.isAdd) {
               this.doAdd()
@@ -180,25 +181,25 @@ export default {
       this.deptId = null
       this.jobId = null
       this.roleIds = []
-      this.form = { username: '', email: '', enabled: 'false', roles: [], job: { id: '' }, dept: { id: '' }, phone: null }
+      this.form = { username: '', email: '', enabled: 'false', roles: [], jobId: null, deptId: null, phone: null }
     },
     getRoles() {
       getAll().then(res => {
-        this.roles = res
+        this.roles = res.data.list
       }).catch(err => {
         console.log(err.response.data.message)
       })
     },
     getJobs(id) {
       getAllJob(id).then(res => {
-        this.jobs = res.content
+        this.jobs = res.data.list
       }).catch(err => {
         console.log(err.response.data.message)
       })
     },
     getDepts() {
       getDepts({ enabled: true }).then(res => {
-        this.depts = res.content
+        this.depts = res.data
       })
     },
     isvalidPhone(str) {
@@ -210,7 +211,7 @@ export default {
     },
     getRoleLevel() {
       getLevel().then(res => {
-        this.level = res.level
+        this.level = res.data
       }).catch(err => {
         console.log(err.response.data.message)
       })

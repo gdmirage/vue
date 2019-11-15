@@ -1,15 +1,13 @@
 import request from '@/utils/request'
 
 export function getAllJob(deptId) {
-  const params = {
-    deptId,
-    page: 0,
-    size: 9999
+  const data = {
+    deptId: deptId
   }
   return request({
-    url: 'api/job',
-    method: 'get',
-    params
+    url: 'job/page',
+    method: 'post',
+    data
   })
 }
 

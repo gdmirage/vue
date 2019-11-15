@@ -2,9 +2,11 @@ import request from '@/utils/request'
 
 // 获取所有的Role
 export function getAll() {
+  const data = {}
   return request({
-    url: 'api/roles/all',
-    method: 'get'
+    url: 'role/page',
+    method: 'post',
+    data
   })
 }
 
@@ -29,7 +31,7 @@ export function get(id) {
 
 export function getLevel() {
   return request({
-    url: 'api/roles/level',
+    url: 'role/level',
     method: 'get'
   })
 }

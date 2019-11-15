@@ -63,7 +63,7 @@
           </el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
             <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createTime) }}</span>
+              <span>{{ scope.row.createTime }}</span>
             </template>
           </el-table-column>
           <el-table-column v-if="checkPermission(['ADMIN','USER_ALL','USER_EDIT','USER_DELETE'])" label="操作" width="125" align="center">
@@ -103,7 +103,6 @@ import initData from '@/mixins/initData'
 import initDict from '@/mixins/initDict'
 import { del } from '@/api/user'
 import { getDepts } from '@/api/dept'
-import { parseTime } from '@/utils/index'
 import eForm from './form'
 export default {
   components: { eForm },
@@ -142,10 +141,9 @@ export default {
     }
   },
   methods: {
-    parseTime,
     checkPermission,
     beforeInit() {
-      this.url = 'api/users'
+      this.url = 'user/page'
       const sort = 'id,desc'
       const query = this.query
       const type = query.type
@@ -179,7 +177,7 @@ export default {
       const params = { sort: sort }
       if (this.deptName) { params['name'] = this.deptName }
       getDepts(params).then(res => {
-        this.depts = res.content
+        this.depts = res.data
       })
     },
     handleNodeClick(data) {
@@ -231,8 +229,9 @@ export default {
       _this.getDepts()
       _this.getRoleLevel()
       _this.roleIds = []
-      _this.form = { id: data.id, username: data.username, phone: data.phone, email: data.email, enabled: data.enabled.toString(), roles: [], dept: { id: data.dept.id }, job: { id: data.job.id }}
+      _this.form = { id: data.id, username: data.username, phone: data.phone, email: data.email, enabled: data.enabled.toString(), roleIds: [], deptId: data.dept.id, jobId: data.job.id }
       data.roles.forEach(function(data, index) {
+        _this.form.roleIds.push(data.id)
         _this.roleIds.push(data.id)
       })
       _this.deptId = data.dept.id
