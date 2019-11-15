@@ -274,9 +274,10 @@ export default {
     update() {
       // 无刷新更新 表格数据
       get(this.currentId).then(res => {
+        const role = res.data
         for (let i = 0; i < this.data.length; i++) {
-          if (res.id === this.data[i].id) {
-            this.data[i] = res
+          if (role.id === this.data[i].id) {
+            this.data[i] = role
             break
           }
         }

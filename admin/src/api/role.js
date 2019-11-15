@@ -17,10 +17,13 @@ export function add(data) {
 }
 
 export function get(id) {
+  const params = {
+    id: id
+  }
   return request({
     url: 'role/getById',
     method: 'get',
-    data: id
+    params
   })
 }
 
