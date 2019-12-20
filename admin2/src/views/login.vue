@@ -79,8 +79,9 @@ export default {
   methods: {
     getCode() {
       getCodeImg().then(res => {
-        this.codeUrl = res.img
-        this.loginForm.uuid = res.uuid
+        console.log(res.data.img)
+        this.codeUrl = res.data.img
+        this.loginForm.uuid = res.data.uuid
       })
     },
     getCookie() {

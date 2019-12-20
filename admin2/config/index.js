@@ -10,6 +10,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     // 配置代理
+    /** 主要是为了兼容不同的后台服务 **/
     proxyTable: {
       '/auth': {
         // 测试环境
@@ -28,12 +29,21 @@ module.exports = {
         pathRewrite: {
           '^/api': 'api'
         }
+      },
+      '/permission': {
+        // 测试环境
+        target: base_url,
+        secure: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/permission': 'permission'
+        }
       }
     },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8013, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8016, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: false,
