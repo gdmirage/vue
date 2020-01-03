@@ -2,8 +2,8 @@
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
       <h3 class="title">EL-ADMIN 后台管理系统</h3>
-      <el-form-item prop="username">
-        <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
+      <el-form-item prop="loginName">
+        <el-input v-model="loginForm.loginName" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
@@ -49,14 +49,14 @@ export default {
       codeUrl: '',
       cookiePass: '',
       loginForm: {
-        username: 'admin',
+        loginName: 'admin',
         password: '123456',
         rememberMe: false,
         code: '',
         uuid: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', message: '用户名不能为空' }],
+        loginName: [{ required: true, trigger: 'blur', message: '用户名不能为空' }],
         password: [{ required: true, trigger: 'blur', message: '密码不能为空' }],
         code: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
       },
@@ -85,14 +85,14 @@ export default {
       })
     },
     getCookie() {
-      const username = Cookies.get('username')
+      const loginName = Cookies.get('loginName')
       let password = Cookies.get('password')
       const rememberMe = Cookies.get('rememberMe')
       // 保存cookie里面的加密后的密码
       this.cookiePass = password === undefined ? '' : password
       password = password === undefined ? this.loginForm.password : password
       this.loginForm = {
-        username: username === undefined ? this.loginForm.username : username,
+        loginName: loginName === undefined ? this.loginForm.loginName : loginName,
         password: password,
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
         code: ''
@@ -101,23 +101,24 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         const user = {
-          username: this.loginForm.username,
-          password: this.loginForm.password,
+          loginName: this.loginForm.loginName,
+          password: this.$md5(this.loginForm.password),
           rememberMe: this.loginForm.rememberMe,
           code: this.loginForm.code,
           uuid: this.loginForm.uuid
         }
+        console.log(user)
         if (user.password !== this.cookiePass) {
           user.password = encrypt(user.password)
         }
         if (valid) {
           this.loading = true
           if (user.rememberMe) {
-            Cookies.set('username', user.username, { expires: Config.passCookieExpires })
+            Cookies.set('loginName', user.loginName, { expires: Config.passCookieExpires })
             Cookies.set('password', user.password, { expires: Config.passCookieExpires })
             Cookies.set('rememberMe', user.rememberMe, { expires: Config.passCookieExpires })
           } else {
-            Cookies.remove('username')
+            Cookies.remove('loginName')
             Cookies.remove('password')
             Cookies.remove('rememberMe')
           }

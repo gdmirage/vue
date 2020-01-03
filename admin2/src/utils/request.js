@@ -37,7 +37,16 @@ service.interceptors.response.use(
       })
       return Promise.reject('error')
     } else {
-      return response.data
+      const data = response.data
+      const code = data.code
+      const successFlag = data.success
+      if (code > 10000 || code < 10000 || successFlag !== true) {
+        Notification.error({
+          title: data.subMsg
+        })
+      } else {
+        return data
+      }
     }
   },
   error => {

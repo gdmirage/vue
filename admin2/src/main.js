@@ -17,12 +17,14 @@ import store from './store'
 import '@/icons' // icon
 import './router/index' // permission control
 import Router from 'vue-router'
+import md5 from 'js-md5'
 
 Vue.use(mavonEditor)
 Vue.use(permission)
 Vue.use(dict)
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
+Vue.prototype.$md5 = md5
 
 const routerPush = Router.prototype.push
 Router.prototype.push = function push(location) {

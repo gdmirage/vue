@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
-export function login(username, password, code, uuid) {
+export function login(loginName, password, code, uuid) {
   return request({
-    url: 'auth/login',
+    url: 'api/permission/login/login',
     method: 'post',
     data: {
-      username,
+      loginName,
       password,
       code,
       uuid
@@ -22,7 +22,7 @@ export function getInfo() {
 
 export function getCodeImg() {
   return request({
-    url: 'permission/login/getCaptcha',
+    url: 'api/permission/login/getCaptcha',
     method: 'get'
   })
 }
