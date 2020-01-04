@@ -79,7 +79,6 @@ export default {
   methods: {
     getCode() {
       getCodeImg().then(res => {
-        console.log(res.data.img)
         this.codeUrl = res.data.img
         this.loginForm.uuid = res.data.uuid
       })
