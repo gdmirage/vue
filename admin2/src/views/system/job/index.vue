@@ -63,7 +63,7 @@
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="checkPermission(['admin','job:edit','job:del'])" label="操作" width="130px" align="center" fixed="right">
@@ -99,7 +99,7 @@
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
 import { del, edit, downloadJob } from '@/api/job'
-import { parseTime, downloadFile } from '@/utils/index'
+import { downloadFile } from '@/utils/index'
 import eForm from './form'
 export default {
   name: 'Job',
@@ -122,10 +122,9 @@ export default {
     })
   },
   methods: {
-    parseTime,
     checkPermission,
     beforeInit() {
-      this.url = 'api/job'
+      this.url = '/api/permission/job/page'
       const sort = 'sort,asc'
       this.params = { page: this.page, size: this.size, sort: sort }
       const query = this.query
