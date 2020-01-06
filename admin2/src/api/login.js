@@ -29,7 +29,7 @@ export function getCodeImg() {
 
 export function logout() {
   return request({
-    url: 'auth/logout',
+    url: 'api/permission/login/logout',
     method: 'delete'
   })
 }
