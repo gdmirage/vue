@@ -7,6 +7,7 @@ export default class Dict {
   }
 
   async init(names, completeCallback) {
+    console.log('Dict init')
     if (names === undefined || name === null) {
       throw new Error('need Dict names')
     }
@@ -16,8 +17,8 @@ export default class Dict {
       Vue.set(this.dict.label, n, {})
       Vue.set(this.dict, n, [])
       ps.push(getDictDetail(n).then(data => {
-        this.dict[n].splice(0, 0, ...data.content)
-        data.content.forEach(d => {
+        this.dict[n].splice(0, 0, ...data.data)
+        data.data.forEach(d => {
           Vue.set(this.dict.dict[n], d.value, d)
           Vue.set(this.dict.label[n], d.value, d.label)
         })

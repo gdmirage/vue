@@ -8,14 +8,13 @@ export default {
   },
   methods: {
     async init() {
+      console.log('initData init')
       if (!await this.beforeInit()) {
         return
       }
       return new Promise((resolve, reject) => {
         this.loading = true
         initData(this.url, this.params).then(res => {
-          console.log(res)
-
           const resData = res.data
 
           this.total = resData.totalCount

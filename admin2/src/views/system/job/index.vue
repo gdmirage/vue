@@ -41,7 +41,7 @@
     <eForm ref="form" :is-add="isAdd" :dicts="dict.job_status"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-      <el-table-column prop="name" label="名称"/>
+      <el-table-column prop="dictName" label="名称"/>
       <el-table-column label="所属部门">
         <template slot-scope="scope">
           <div>{{ scope.row.deptSuperiorName ? scope.row.deptSuperiorName + ' / ' : '' }}{{ scope.row.dept.name }}</div>
@@ -118,7 +118,9 @@ export default {
   },
   created() {
     this.$nextTick(() => {
+      console.log('job before init')
       this.init()
+      console.log('job after init')
     })
   },
   methods: {

@@ -38,6 +38,15 @@ module.exports = {
         pathRewrite: {
           '^/permission': 'permission'
         }
+      },
+      '/basis': {
+        // 测试环境
+        target: base_url,
+        secure: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/basis': 'basis'
+        }
       }
     },
 
