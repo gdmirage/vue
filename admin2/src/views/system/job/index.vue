@@ -41,10 +41,14 @@
     <eForm ref="form" :is-add="isAdd" :dicts="dict.job_status"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-      <el-table-column prop="dictName" label="名称"/>
+      <el-table-column label = "名称">
+        <template slot-scope="scope">
+          {{ scope.row.jobName }}
+        </template>
+      </el-table-column>
       <el-table-column label="所属部门">
         <template slot-scope="scope">
-          <div>{{ scope.row.deptSuperiorName ? scope.row.deptSuperiorName + ' / ' : '' }}{{ scope.row.dept.name }}</div>
+          <div>{{ scope.row.deptSuperiorName ? scope.row.deptSuperiorName + ' / ' : '' }}{{ scope.row.dept.deptName }}</div>
         </template>
       </el-table-column>
       <el-table-column prop="sort" label="排序">
@@ -54,11 +58,14 @@
       </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
+          {{ scope.row.status }}
           <el-switch
-            v-model="scope.row.enabled"
+            v-model="scope.row.status"
+            active-value="enabled"
+            inactive-value="disabled"
             active-color="#409EFF"
             inactive-color="#F56C6C"
-            @change="changeEnabled(scope.row, scope.row.enabled,)"/>
+            @change="changeEnabled(scope.row, scope.row.status,)"/>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期">
@@ -180,11 +187,14 @@ export default {
     },
     // 改变状态
     changeEnabled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.job_status[val] + '" ' + data.name + '岗位, 是否继续？', '提示', {
+      console.log(data.status + '---' + val)
+      console.log(this.dict.label)
+      this.$confirm('此操作将 "' + this.dict.label.job_status[val] + '" ' + data.jobName + '岗位, 是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        console.log('edit')
         edit(data).then(res => {
           this.$notify({
             title: this.dict.label.job_status[val] + '成功',
@@ -192,11 +202,11 @@ export default {
             duration: 2500
           })
         }).catch(err => {
-          data.enabled = !data.enabled
+          data.status = data.status === 'enabled' ? 'disabled' : 'enabled'
           console.log(err.response.data.message)
         })
       }).catch(() => {
-        data.enabled = !data.enabled
+        data.status = data.status === 'enabled' ? 'disabled' : 'enabled'
       })
     },
     download() {

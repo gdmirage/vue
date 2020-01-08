@@ -30,7 +30,7 @@ export function del(id) {
 
 export function edit(data) {
   return request({
-    url: 'api/job',
+    url: 'api/permission/job/edit',
     method: 'put',
     data
   })
