@@ -13,7 +13,7 @@
         value-format="yyyy-MM-dd HH:mm:ss"
         start-placeholder="开始日期"
         end-placeholder="结束日期"/>
-      <el-select v-model="query.enabled" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
+      <el-select v-model="query.status" clearable placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
         <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
       </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
@@ -58,7 +58,6 @@
       </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
-          {{ scope.row.status }}
           <el-switch
             v-model="scope.row.status"
             active-value="enabled"
@@ -118,8 +117,8 @@ export default {
     return {
       delLoading: false,
       enabledTypeOptions: [
-        { key: 'true', display_name: '正常' },
-        { key: 'false', display_name: '禁用' }
+        { key: 'enabled', display_name: '正常' },
+        { key: 'disabled', display_name: '禁用' }
       ]
     }
   },
@@ -138,13 +137,13 @@ export default {
       this.params = { page: this.page, size: this.size, sort: sort }
       const query = this.query
       const value = query.value
-      const enabled = query.enabled
-      if (value) { this.params['name'] = value }
+      const status = query.status
+      if (value) { this.params['jobName'] = value }
       if (query.date) {
         this.params['startTime'] = query.date[0]
         this.params['endTime'] = query.date[1]
       }
-      if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
+      if (status !== '' && status !== null) { this.params['status'] = status }
       return true
     },
     subDelete(id) {
@@ -187,8 +186,6 @@ export default {
     },
     // 改变状态
     changeEnabled(data, val) {
-      console.log(data.status + '---' + val)
-      console.log(this.dict.label)
       this.$confirm('此操作将 "' + this.dict.label.job_status[val] + '" ' + data.jobName + '岗位, 是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
