@@ -166,22 +166,22 @@ export default {
     },
     add() {
       this.isAdd = true
-      this.$refs.form.getDepts()
+      this.$refs.form.getDeptTree()
       this.$refs.form.dialog = true
     },
     edit(data) {
       this.isAdd = false
       const _this = this.$refs.form
-      _this.getDepts()
+      _this.getDeptTree()
       _this.form = {
         id: data.id,
         name: data.name,
         sort: data.sort,
-        enabled: data.enabled.toString(),
+        status: data.status,
         createTime: data.createTime,
-        dept: { id: data.dept.id }
+        dept: { id: data.deptId }
       }
-      _this.deptId = data.dept.id
+      _this.deptId = data.deptId
       _this.dialog = true
     },
     // 改变状态

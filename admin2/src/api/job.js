@@ -15,7 +15,7 @@ export function getAllJob(deptId) {
 
 export function add(data) {
   return request({
-    url: 'api/job',
+    url: 'api/permission/job/add',
     method: 'post',
     data
   })

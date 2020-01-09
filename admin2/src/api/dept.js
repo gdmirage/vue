@@ -8,6 +8,13 @@ export function getDepts(params) {
   })
 }
 
+export function getDeptTree() {
+  return request({
+    url: '/api/permission/dept/getDeptTree',
+    method: 'get'
+  })
+}
+
 export function add(data) {
   return request({
     url: 'api/dept',

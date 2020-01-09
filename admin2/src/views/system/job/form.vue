@@ -1,14 +1,14 @@
 <template>
   <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="isAdd ? '新增岗位' : '编辑岗位'" width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name" style="width: 370px;"/>
+      <el-form-item label="名称" prop="jobName">
+        <el-input v-model="form.jobName" style="width: 370px;"/>
       </el-form-item>
       <el-form-item label="排序" prop="sort">
         <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 370px;"/>
       </el-form-item>
-      <el-form-item v-if="form.pid !== 0" label="状态" prop="enabled">
-        <el-radio v-for="item in dicts" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
+      <el-form-item v-if="form.pid !== 0" label="状态" prop="status">
+        <el-radio v-for="item in dicts" :key="item.id" v-model="form.status" :label="item.value">{{ item.label }}</el-radio>
       </el-form-item>
       <el-form-item label="所属部门">
         <treeselect v-model="deptId" :options="depts" style="width: 370px" placeholder="选择部门" />
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { getDepts } from '@/api/dept'
+import { getDeptTree } from '@/api/dept'
 import { add, edit } from '@/api/job'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
@@ -43,14 +43,14 @@ export default {
       loading: false, dialog: false, depts: [], deptId: null,
       form: {
         id: '',
-        name: '',
+        jobName: '',
         sort: 999,
-        enabled: 'true',
+        status: 'enabled',
         createTime: '',
-        dept: { id: '' }
+        deptId: ''
       },
       rules: {
-        name: [
+        jobName: [
           { required: true, message: '请输入名称', trigger: 'blur' }
         ],
         sort: [
@@ -64,7 +64,7 @@ export default {
       this.resetForm()
     },
     doSubmit() {
-      this.form.dept.id = this.deptId
+      this.form.deptId = this.deptId
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.deptId === null || this.deptId === undefined) {
@@ -124,9 +124,9 @@ export default {
         dept: { id: '' }
       }
     },
-    getDepts() {
-      getDepts({ enabled: true }).then(res => {
-        this.depts = res.content
+    getDeptTree() {
+      getDeptTree().then(res => {
+        this.depts = res.data
       })
     }
   }
