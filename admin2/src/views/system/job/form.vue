@@ -76,7 +76,9 @@ export default {
             this.loading = true
             if (this.isAdd) {
               this.doAdd()
-            } else this.doEdit()
+            } else {
+              this.doEdit()
+            }
           }
         }
       })

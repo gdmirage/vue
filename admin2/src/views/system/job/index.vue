@@ -175,7 +175,7 @@ export default {
       _this.getDeptTree()
       _this.form = {
         id: data.id,
-        name: data.name,
+        jobName: data.jobName,
         sort: data.sort,
         status: data.status,
         createTime: data.createTime,
