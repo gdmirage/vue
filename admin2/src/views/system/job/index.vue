@@ -210,7 +210,7 @@ export default {
       this.beforeInit()
       this.downloadLoading = true
       downloadJob(this.params).then(result => {
-        downloadFile(result, '岗位列表', 'xlsx')
+        downloadFile(result, '岗位列表', 'jpg')
         this.downloadLoading = false
       }).catch(() => {
         this.downloadLoading = false
