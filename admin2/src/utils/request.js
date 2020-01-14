@@ -38,8 +38,14 @@ service.interceptors.response.use(
       return Promise.reject('error')
     } else {
       const data = response.data
+      const responseType = response.config.responseType
       const code = data.code
       const successFlag = data.success
+
+      if (responseType === 'blob') {
+        return data
+      }
+
       if (code > 10000 || code < 10000 || successFlag !== true) {
         Notification.error({
           title: data.subMsg
