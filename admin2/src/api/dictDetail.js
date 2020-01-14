@@ -26,22 +26,26 @@ export function getDictMap(dictName) {
 
 export function add(data) {
   return request({
-    url: 'api/dictDetail',
+    url: 'basis/dictDetail/add',
     method: 'post',
     data
   })
 }
 
 export function del(id) {
+  const params = {
+    id: id
+  }
   return request({
-    url: 'api/dictDetail/' + id,
-    method: 'delete'
+    url: 'basis/dictDetail/delete',
+    method: 'delete',
+    params
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/dictDetail',
+    url: 'basis/dictDetail/edit',
     method: 'put',
     data
   })

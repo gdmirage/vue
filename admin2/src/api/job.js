@@ -22,9 +22,13 @@ export function add(data) {
 }
 
 export function del(id) {
+  const params = {
+    id: id
+  }
   return request({
-    url: 'api/job/' + id,
-    method: 'delete'
+    url: 'api/permission/job/delete',
+    method: 'delete',
+    params
   })
 }
 

@@ -55,7 +55,7 @@ export default {
       this.resetForm()
     },
     doSubmit() {
-      this.form['dict'] = { id: this.dictId }
+      this.form['dictId'] = this.dictId
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true

@@ -34,7 +34,7 @@
           </div>
           <!--表格渲染-->
           <el-table v-loading="loading" :data="data" size="small" highlight-current-row style="width: 100%;" @current-change="handleCurrentChange">
-            <el-table-column :show-overflow-tooltip="true" prop="name" label="名称"/>
+            <el-table-column :show-overflow-tooltip="true" prop="dictName" label="名称"/>
             <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述"/>
             <el-table-column v-if="checkPermission(['admin','dict:edit','dict:del'])" label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
@@ -112,12 +112,12 @@ export default {
   methods: {
     checkPermission,
     beforeInit() {
-      this.url = 'api/dict'
+      this.url = 'basis/dict/page'
       const sort = 'id,desc'
       this.params = { page: this.page, size: this.size, sort: sort }
       const query = this.query
-      const value = query.value
-      if (value) { this.params['blurry'] = value }
+      const dictName = query.value
+      if (dictName) { this.params['dictName'] = dictName }
       if (this.$refs.dictDetail) {
         this.$refs.dictDetail.data = []
         this.$refs.dictDetail.dictName = ''
@@ -144,7 +144,7 @@ export default {
     },
     handleCurrentChange(val) {
       if (val) {
-        this.$refs.dictDetail.dictName = val.name
+        this.$refs.dictDetail.dictName = val.dictName
         this.$refs.dictDetail.dictId = val.id
         this.$refs.dictDetail.init()
       }
@@ -154,7 +154,7 @@ export default {
       const _this = this.$refs.form
       _this.form = {
         id: data.id,
-        name: data.name,
+        dictName: data.dictName,
         remark: data.remark
       }
       _this.dialog = true

@@ -19,7 +19,11 @@
             {{ dictName }}
           </template>
         </el-table-column>
-        <el-table-column prop="label" label="字典标签"/>
+        <el-table-column label="字典标签">
+          <template slot-scope="scope">
+            {{ scope.row.label }}
+          </template>
+        </el-table-column>
         <el-table-column prop="value" label="字典值"/>
         <el-table-column prop="sort" label="排序"/>
         <el-table-column v-if="checkPermission(['admin','dict:edit','dict:del'])" label="操作" width="130px" align="center" fixed="right">
@@ -71,8 +75,8 @@ export default {
   methods: {
     checkPermission,
     beforeInit() {
-      this.url = 'api/dictDetail'
-      this.params = { page: this.page, size: this.size, dictName: this.dictName }
+      this.url = 'basis/dictDetail/page'
+      this.params = { page: this.page, size: this.size, dictName: this.dictName, dictId: this.dictId }
       const query = this.query
       const value = query.value
       if (value) { this.params['label'] = value }
