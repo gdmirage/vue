@@ -191,7 +191,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log('edit')
         edit(data).then(res => {
           this.$notify({
             title: this.dict.label.job_status[val] + '成功',

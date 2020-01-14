@@ -41,15 +41,17 @@
     <eForm ref="form" :is-add="isAdd" :dicts="dict.dept_status"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :default-expand-all="expand" :data="data" row-key="id" size="small">
-      <el-table-column label="名称" prop="name"/>
+      <el-table-column label="名称" prop="deptName"/>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
           <el-switch
-            v-model="scope.row.enabled"
+            v-model="scope.row.status"
             :disabled="scope.row.id == 1"
+            active-value="enabled"
+            inactive-value="disabled"
             active-color="#409EFF"
             inactive-color="#F56C6C"
-            @change="changeEnabled(scope.row, scope.row.enabled,)"/>
+            @change="changeEnabled(scope.row, scope.row.status,)"/>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期">
@@ -93,8 +95,8 @@ export default {
   data() {
     return {
       enabledTypeOptions: [
-        { key: 'true', display_name: '正常' },
-        { key: 'false', display_name: '禁用' }
+        { key: 'enabled', display_name: '正常' },
+        { key: 'disabled', display_name: '禁用' }
       ],
       delLoading: false, expand: true
     }
@@ -108,18 +110,18 @@ export default {
     parseTime,
     checkPermission,
     beforeInit() {
-      this.url = 'api/dept'
+      this.url = 'api/permission/dept/deptList'
       const sort = 'id,desc'
-      this.params = { page: this.page, size: this.size, sort: sort }
+      this.params = { page: this.page, size: 999, sort: sort }
       const query = this.query
       const value = query.value
       const enabled = query.enabled
-      if (value) { this.params['name'] = value }
+      if (value) { this.params['deptName'] = value }
       if (query.date) {
         this.params['startTime'] = query.date[0]
         this.params['endTime'] = query.date[1]
       }
-      if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
+      if (enabled !== '' && enabled !== null) { this.params['status'] = enabled }
       return true
     },
     subDelete(id) {
@@ -163,7 +165,7 @@ export default {
     },
     // 改变状态
     changeEnabled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.dept_status[val] + '" ' + data.name + '部门, 是否继续？', '提示', {
+      this.$confirm('此操作将 "' + this.dict.label.dept_status[val] + '" ' + data.deptName + '部门, 是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
