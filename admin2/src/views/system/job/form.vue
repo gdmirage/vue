@@ -121,7 +121,7 @@ export default {
         id: '',
         name: '',
         sort: 999,
-        enabled: 'true',
+        status: 'enabled',
         createTime: '',
         dept: { id: '' }
       }

@@ -1,11 +1,11 @@
 <template>
   <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="isAdd ? '新增部门' : '编辑部门'" width="500px">
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name" style="width: 370px;"/>
+      <el-form-item label="名称" prop="deptName">
+        <el-input v-model="form.deptName" style="width: 370px;"/>
       </el-form-item>
-      <el-form-item v-if="form.pid !== 0" label="状态" prop="enabled">
-        <el-radio v-for="item in dicts" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
+      <el-form-item v-if="form.pid !== 0" label="状态" prop="status">
+        <el-radio v-for="item in dicts" :key="item.id" v-model="form.status" :label="item.value">{{ item.label }}</el-radio>
       </el-form-item>
       <el-form-item v-if="form.pid !== 0" style="margin-bottom: 0px;" label="上级部门">
         <treeselect v-model="form.pid" :options="depts" style="width: 370px;" placeholder="选择上级类目" />
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { add, edit, getDepts } from '@/api/dept'
+import { add, edit, getDeptTree } from '@/api/dept'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
@@ -41,7 +41,7 @@ export default {
         id: '',
         name: '',
         pid: 1,
-        enabled: 'true'
+        status: 'enabled'
       },
       rules: {
         name: [
@@ -108,12 +108,12 @@ export default {
         id: '',
         name: '',
         pid: 1,
-        enabled: 'true'
+        status: 'enabled'
       }
     },
     getDepts() {
-      getDepts({ enabled: true }).then(res => {
-        this.depts = res.content
+      getDeptTree().then(res => {
+        this.depts = res.data
       })
     }
   }
