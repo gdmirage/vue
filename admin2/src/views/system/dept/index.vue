@@ -67,7 +67,7 @@
             :ref="scope.row.id"
             placement="top"
             width="180">
-            <p>确定删除本条数据吗？</p>
+            <p>确定删除吗？如果存在下级节点则一并删除，此操作不能撤销！</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
@@ -156,10 +156,10 @@ export default {
       _this.getDepts()
       _this.form = {
         id: data.id,
-        name: data.name,
+        deptName: data.deptName,
         pid: data.pid,
         createTime: data.createTime,
-        enabled: data.enabled.toString()
+        status: data.status
       }
       _this.dialog = true
     },
