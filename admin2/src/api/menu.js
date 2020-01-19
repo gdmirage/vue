@@ -3,14 +3,14 @@ import request from '@/utils/request'
 // 获取所有的菜单树
 export function getMenusTree() {
   return request({
-    url: 'api/menus/tree',
+    url: 'api/permission/menu/menuSelectTree',
     method: 'get'
   })
 }
 
 export function buildMenus() {
   return request({
-    url: '/api/permission/menu/build',
+    url: 'api/permission/menu/build',
     method: 'get'
   })
 }

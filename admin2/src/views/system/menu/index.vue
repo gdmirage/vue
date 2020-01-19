@@ -38,7 +38,7 @@
     <eForm ref="form" :is-add="isAdd"/>
     <!--表格渲染-->
     <el-table v-loading="loading" :data="data" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :default-expand-all="expand" row-key="id" size="small">
-      <el-table-column :show-overflow-tooltip="true" label="菜单名称" width="125px" prop="name"/>
+      <el-table-column :show-overflow-tooltip="true" label="菜单名称" width="125px" prop="menuName"/>
       <el-table-column prop="icon" label="图标" align="center" width="60px">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" />
@@ -50,12 +50,12 @@
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="path" label="路由地址"/>
-      <el-table-column :show-overflow-tooltip="true" prop="permission" label="权限标识"/>
+      <el-table-column :show-overflow-tooltip="true" prop="permissionCode" label="权限标识"/>
       <!--<el-table-column :show-overflow-tooltip="true" prop="componentName" label="组件名称"/>-->
       <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径"/>
       <el-table-column prop="iframe" label="外链" width="75px">
         <template slot-scope="scope">
-          <span v-if="scope.row.iframe">是</span>
+          <span v-if="scope.row.iframe === 'yes'">是</span>
           <span v-else>否</span>
         </template>
       </el-table-column>
@@ -121,12 +121,12 @@ export default {
     parseTime,
     checkPermission,
     beforeInit() {
-      this.url = 'api/menus'
+      this.url = 'api/permission/menu/menuList'
       const sort = 'id,desc'
       const query = this.query
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['blurry'] = value }
+      if (value) { this.params['menuName'] = value }
       if (query.date) {
         this.params['startTime'] = query.date[0]
         this.params['endTime'] = query.date[1]
