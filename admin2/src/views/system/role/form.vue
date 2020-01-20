@@ -126,7 +126,7 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = { name: '', depts: [], remark: '', dataScope: '本级', level: 3, permission: '' }
+      this.form = { name: '', depts: [], deptIds: [], remark: '', dataScope: '本级', level: 3, permission: '' }
     },
     getDepts() {
       getDepts().then(res => {
