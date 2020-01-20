@@ -17,22 +17,26 @@ export function buildMenus() {
 
 export function add(data) {
   return request({
-    url: 'api/menus',
+    url: 'api/permission/menu/add',
     method: 'post',
     data
   })
 }
 
 export function del(id) {
+  const params = {
+    id: id
+  }
   return request({
-    url: 'api/menus/' + id,
-    method: 'delete'
+    url: 'api/permission/menu/delete',
+    method: 'delete',
+    params
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'api/menus',
+    url: 'api/permission/menu/edit',
     method: 'put',
     data
   })

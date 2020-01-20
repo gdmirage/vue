@@ -59,21 +59,15 @@
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column prop="iframe" label="缓存" width="75px">
+      <el-table-column prop="hidden" label="可见" width="75px">
         <template slot-scope="scope">
-          <span v-if="scope.row.cache">是</span>
-          <span v-else>否</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="iframe" label="可见" width="75px">
-        <template slot-scope="scope">
-          <span v-if="scope.row.hidden">否</span>
+          <span v-if="scope.row.hidden === 'no'">否</span>
           <span v-else>是</span>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建日期" width="135px">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="checkPermission(['admin','menu:edit','menu:del'])" label="操作" width="130px" align="center" fixed="right">
@@ -159,7 +153,18 @@ export default {
       this.isAdd = false
       const _this = this.$refs.form
       _this.getMenus()
-      _this.form = { id: data.id, component: data.component, componentName: data.componentName, name: data.name, sort: data.sort, pid: data.pid, path: data.path, iframe: data.iframe.toString(), roles: [], icon: data.icon, cache: data.cache, hidden: data.hidden, type: data.type, permission: data.permission }
+      _this.form = {
+        id: data.id,
+        component: data.component,
+        menuName: data.menuName,
+        sort: data.sort,
+        pid: data.pid,
+        path: data.path,
+        iframe: data.iframe.toString(),
+        roles: [], icon: data.icon,
+        hidden: data.hidden,
+        type: data.type,
+        permissionCode: data.permissionCode }
       _this.dialog = true
     },
     changExpand() {

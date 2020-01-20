@@ -3,12 +3,12 @@
     <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
       <el-form-item label="菜单类型">
         <el-radio-group v-model="form.type" size="mini" style="width: 178px">
-          <el-radio-button label="0">目录</el-radio-button>
-          <el-radio-button label="1">菜单</el-radio-button>
-          <el-radio-button label="2">按钮</el-radio-button>
+          <el-radio-button label="catalog">目录</el-radio-button>
+          <el-radio-button label="menu">菜单</el-radio-button>
+          <el-radio-button label="button">按钮</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-show="form.type.toString() !== '2'" label="菜单图标">
+      <el-form-item v-show="form.type.toString() !== 'button'" label="菜单图标">
         <el-popover
           placement="bottom-start"
           width="450"
@@ -21,43 +21,34 @@
           </el-input>
         </el-popover>
       </el-form-item>
-      <el-form-item v-show="form.type.toString() !== '2'" label="外链菜单">
+      <el-form-item v-show="form.type.toString() !== 'button'" label="外链菜单">
         <el-radio-group v-model="form.iframe" size="mini">
-          <el-radio-button label="true">是</el-radio-button>
-          <el-radio-button label="false">否</el-radio-button>
+          <el-radio-button label="yes">是</el-radio-button>
+          <el-radio-button label="no">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-show="form.type.toString() === '1'" label="菜单缓存">
-        <el-radio-group v-model="form.cache" size="mini">
-          <el-radio-button label="true">是</el-radio-button>
-          <el-radio-button label="false">否</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item v-show="form.type.toString() !== '2'" label="菜单可见">
+      <el-form-item v-show="form.type.toString() !== 'button'" label="菜单可见">
         <el-radio-group v-model="form.hidden" size="mini">
-          <el-radio-button label="false">是</el-radio-button>
-          <el-radio-button label="true">否</el-radio-button>
+          <el-radio-button label="yes">是</el-radio-button>
+          <el-radio-button label="no">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-show="form.type.toString() !== '2'" label="菜单标题" prop="name">
-        <el-input v-model="form.name" :style=" form.type.toString() === '0' ? 'width: 450px' : 'width: 178px'" placeholder="菜单标题"/>
+      <el-form-item v-show="form.type.toString() !== 'button'" label="菜单标题" prop="menuName">
+        <el-input v-model="form.menuName" :style=" form.type.toString() === '0' ? 'width: 450px' : 'width: 178px'" placeholder="菜单标题"/>
       </el-form-item>
-      <el-form-item v-show="form.type.toString() === '2'" label="按钮名称">
-        <el-input v-model="form.name" placeholder="按钮名称" style="width: 178px;"/>
+      <el-form-item v-show="form.type.toString() === 'button'" label="按钮名称">
+        <el-input v-model="form.menuName" placeholder="按钮名称" style="width: 178px;"/>
       </el-form-item>
-      <el-form-item v-show="form.type.toString() !== '0'" label="权限标识">
-        <el-input :disabled="form.iframe === 'true'" v-model="form.permission" placeholder="权限标识" style="width: 178px;"/>
+      <el-form-item v-show="form.type.toString() !== 'catalog'" label="权限标识">
+        <el-input :disabled="form.iframe === 'true'" v-model="form.permissionCode" placeholder="权限标识" style="width: 178px;"/>
       </el-form-item>
-      <el-form-item v-if="form.type.toString() !== '2'" label="路由地址" prop="path">
+      <el-form-item v-if="form.type.toString() !== 'button'" label="路由地址" prop="path">
         <el-input v-model="form.path" placeholder="路由地址" style="width: 178px;"/>
       </el-form-item>
       <el-form-item label="菜单排序">
         <el-input-number v-model.number="form.sort" :min="0" :max="999" controls-position="right" style="width: 178px;"/>
       </el-form-item>
-      <el-form-item v-show="form.iframe === 'false' && form.type.toString() === '1'" label="组件名称">
-        <el-input v-model="form.componentName" style="width: 178px;" placeholder="匹配组件内Name字段"/>
-      </el-form-item>
-      <el-form-item v-show="form.iframe === 'false' && form.type.toString() === '1'" label="组件路径">
+      <el-form-item v-show="form.iframe === 'no' && form.type.toString() === 'menu'" label="组件路径">
         <el-input v-model="form.component" style="width: 178px;" placeholder="组件路径"/>
       </el-form-item>
       <el-form-item label="上级类目">
@@ -87,9 +78,9 @@ export default {
   data() {
     return {
       loading: false, dialog: false, menus: [],
-      form: { name: '', sort: 999, path: '', component: '', componentName: '', iframe: 'false', roles: [], pid: 0, icon: '', cache: false, hidden: false, type: 0, permission: '' },
+      form: { menuName: '', sort: 999, path: '', component: '', componentName: '', iframe: 'no', roles: [], pid: 0, icon: '', hidden: 'no', type: 'catalog', permissionCode: '' },
       rules: {
-        name: [
+        menuName: [
           { required: true, message: '请输入名称', trigger: 'blur' }
         ],
         path: [
@@ -145,14 +136,13 @@ export default {
     resetForm() {
       this.dialog = false
       this.$refs['form'].resetFields()
-      this.form = { name: '', sort: 999, path: '', component: '', componentName: '', iframe: 'false', roles: [], pid: 0, icon: '', cache: false, hidden: false, type: 0, permission: '' }
+      this.form = { name: '', sort: 999, path: '', component: '', componentName: '', iframe: 'no', roles: [], pid: 0, icon: '', hidden: 'no', type: 'catalog', permissionCode: '' }
     },
     selected(name) {
       this.form.icon = name
     },
     getMenus() {
       getMenusTree().then(res => {
-        console.log(res)
         this.menus = []
         const menu = { id: 0, label: '顶级类目', children: [] }
         menu.children = res.data
