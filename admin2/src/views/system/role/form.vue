@@ -1,8 +1,8 @@
 <template>
   <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="isAdd ? '新增角色' : '编辑角色'" append-to-body width="520px">
     <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
-      <el-form-item label="角色名称" prop="name">
-        <el-input v-model="form.name" style="width: 145px;"/>
+      <el-form-item label="角色名称" prop="roleName">
+        <el-input v-model="form.roleName" style="width: 145px;"/>
       </el-form-item>
       <el-form-item label="角色权限" prop="permission">
         <el-input v-model="form.permission" style="width: 145px;"/>
@@ -50,9 +50,9 @@ export default {
     return {
       dateScopes: ['全部', '本级', '自定义'],
       loading: false, dialog: false, depts: [], deptIds: [],
-      form: { name: '', depts: [], remark: '', dataScope: '本级', level: 3, permission: '' },
+      form: { name: '', depts: [], deptIds: [], remark: '', dataScope: '本级', level: 3, permission: '' },
       rules: {
-        name: [
+        roleName: [
           { required: true, message: '请输入名称', trigger: 'blur' }
         ],
         permission: [
@@ -73,11 +73,10 @@ export default {
         })
       } else {
         this.form.depts = []
+        this.form.deptIds = []
         if (this.form.dataScope === '自定义') {
           for (let i = 0; i < this.deptIds.length; i++) {
-            this.form.depts.push({
-              id: this.deptIds[i]
-            })
+            this.form.deptIds.push(this.deptIds[i])
           }
         }
         this.$refs['form'].validate((valid) => {
@@ -85,7 +84,9 @@ export default {
             this.loading = true
             if (this.isAdd) {
               this.doAdd()
-            } else this.doEdit()
+            } else {
+              this.doEdit()
+            }
           } else {
             return false
           }
@@ -128,8 +129,8 @@ export default {
       this.form = { name: '', depts: [], remark: '', dataScope: '本级', level: 3, permission: '' }
     },
     getDepts() {
-      getDepts({ enabled: true }).then(res => {
-        this.depts = res.content
+      getDepts().then(res => {
+        this.depts = res.data
       })
     },
     changeScope() {

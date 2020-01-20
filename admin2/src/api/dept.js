@@ -1,10 +1,9 @@
 import request from '@/utils/request'
 
-export function getDepts(params) {
+export function getDepts() {
   return request({
-    url: 'api/dept',
-    method: 'get',
-    params
+    url: 'api/permission/dept/getDeptTree',
+    method: 'get'
   })
 }
 
