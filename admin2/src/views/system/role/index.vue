@@ -44,14 +44,14 @@
             <span class="role-span">角色列表</span>
           </div>
           <el-table v-loading="loading" :data="data" highlight-current-row size="small" style="width: 100%;" @current-change="handleCurrentChange">
-            <el-table-column prop="name" label="名称"/>
+            <el-table-column prop="roleName" label="名称"/>
             <el-table-column prop="dataScope" label="数据权限"/>
             <el-table-column prop="permission" label="角色权限"/>
             <el-table-column prop="level" label="角色级别"/>
             <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述"/>
             <el-table-column :show-overflow-tooltip="true" width="130px" prop="createTime" label="创建日期">
               <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.createTime) }}</span>
+                <span>{{ scope.row.createTime }}</span>
               </template>
             </el-table-column>
             <el-table-column v-if="checkPermission(['admin','roles:edit','roles:del'])" label="操作" width="130px" align="center" fixed="right">
@@ -147,12 +147,12 @@ export default {
     checkPermission,
     beforeInit() {
       this.showButton = false
-      this.url = 'api/roles'
+      this.url = 'api/permission/role/page'
       const sort = 'level,asc'
       const query = this.query
       const value = query.value
       this.params = { page: this.page, size: this.size, sort: sort }
-      if (value) { this.params['blurry'] = value }
+      if (value) { this.params['roleName'] = value }
       if (query.date) {
         this.params['startTime'] = query.date[0]
         this.params['endTime'] = query.date[1]
@@ -181,7 +181,7 @@ export default {
     },
     getMenus() {
       getMenusTree().then(res => {
-        this.menus = res
+        this.menus = res.data
       })
     },
     handleCurrentChange(val) {
@@ -246,7 +246,7 @@ export default {
       this.isAdd = false
       const _this = this.$refs.form
       _this.deptIds = []
-      _this.form = { id: data.id, name: data.name, remark: data.remark, depts: data.depts, dataScope: data.dataScope, level: data.level, permission: data.permission }
+      _this.form = { id: data.id, roleName: data.roleName, remark: data.remark, depts: data.depts, dataScope: data.dataScope, level: data.level, permission: data.permission }
       if (_this.form.dataScope === '自定义') {
         _this.getDepts()
       }
