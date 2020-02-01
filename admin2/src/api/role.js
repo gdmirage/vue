@@ -59,8 +59,8 @@ export function editPermission(data) {
 
 export function editMenu(data) {
   return request({
-    url: 'api/roles/menu',
-    method: 'put',
+    url: 'api/permission/role/editMenus',
+    method: 'post',
     data
   })
 }

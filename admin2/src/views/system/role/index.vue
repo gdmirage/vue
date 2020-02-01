@@ -203,16 +203,14 @@ export default {
     },
     saveMenu() {
       this.menuLoading = true
-      const role = { id: this.currentId, menus: [] }
+      const role = { roleId: this.currentId, menuIds: [] }
       // 得到半选的父节点数据，保存起来
       this.$refs.menu.getHalfCheckedNodes().forEach(function(data, index) {
-        const menu = { id: data.id }
-        role.menus.push(menu)
+        role.menuIds.push(data.id)
       })
       // 得到已选中的 key 值
       this.$refs.menu.getCheckedKeys().forEach(function(data, index) {
-        const menu = { id: data }
-        role.menus.push(menu)
+        role.menuIds.push(data)
       })
       editMenu(role).then(res => {
         this.$notify({
@@ -230,9 +228,10 @@ export default {
     update() {
       // 无刷新更新 表格数据
       get(this.currentId).then(res => {
+        const resData = res.data
         for (let i = 0; i < this.data.length; i++) {
-          if (res.id === this.data[i].id) {
-            this.data[i] = res
+          if (resData.id === this.data[i].id) {
+            this.data[i] = resData
             break
           }
         }
