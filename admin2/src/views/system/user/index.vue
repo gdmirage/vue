@@ -51,12 +51,12 @@
         </div>
         <!--表格渲染-->
         <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-          <el-table-column prop="username" label="用户名"/>
-          <el-table-column prop="phone" label="电话"/>
+          <el-table-column prop="loginName" label="登陆名"/>
+          <el-table-column prop="mobilePhone" label="电话"/>
           <el-table-column :show-overflow-tooltip="true" prop="email" label="邮箱"/>
           <el-table-column label="部门 / 岗位">
             <template slot-scope="scope">
-              <div>{{ scope.row.dept.name }} / {{ scope.row.job.name }}</div>
+              <div>{{ scope.row.deptName }} / {{ scope.row.jobName }}</div>
             </template>
           </el-table-column>
           <el-table-column label="状态" align="center">
@@ -121,9 +121,11 @@ export default {
     return {
       height: document.documentElement.clientHeight - 180 + 'px;', isAdd: false,
       delLoading: false, deptName: '', depts: [], deptId: null,
+      // 设置tree对应的后台返回的字段
       defaultProps: {
         children: 'children',
-        label: 'name'
+        id: 'id',
+        label: 'label'
       },
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
@@ -147,7 +149,7 @@ export default {
     parseTime,
     checkPermission,
     beforeInit() {
-      this.url = 'api/users'
+      this.url = '/api/permission/user/page'
       const sort = 'id,desc'
       const query = this.query
       const blurry = query.blurry
@@ -158,7 +160,7 @@ export default {
         this.params['startTime'] = query.date[0]
         this.params['endTime'] = query.date[1]
       }
-      if (enabled !== '' && enabled !== null) { this.params['enabled'] = enabled }
+      if (enabled !== '' && enabled !== null) { this.params['status'] = enabled }
       return true
     },
     // 导出
@@ -195,7 +197,8 @@ export default {
       const params = { sort: sort }
       if (this.deptName) { params['name'] = this.deptName }
       getDepts(params).then(res => {
-        this.depts = res.content
+        this.depts = res.data
+        console.log(this.depts)
       })
     },
     handleNodeClick(data) {
