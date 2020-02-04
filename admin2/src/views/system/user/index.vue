@@ -15,7 +15,7 @@
         <!--工具栏-->
         <div class="head-container">
           <!-- 搜索 -->
-          <el-input v-model="query.blurry" clearable placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
+          <el-input v-model="query.blurry" clearable placeholder="输入登陆账号或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
           <el-date-picker
             v-model="query.date"
             type="daterange"
@@ -62,15 +62,17 @@
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
               <el-switch
-                v-model="scope.row.enabled"
+                v-model="scope.row.status"
+                active-value="enabled"
+                inactive-value="disabled"
                 active-color="#409EFF"
                 inactive-color="#F56C6C"
-                @change="changeEnabled(scope.row, scope.row.enabled,)"/>
+                @change="changeEnabled(scope.row, scope.row.status,)"/>
             </template>
           </el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
             <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createTime) }}</span>
+              <span>{{ scope.row.createTime }}</span>
             </template>
           </el-table-column>
           <el-table-column v-if="checkPermission(['admin','user:edit','user:del'])" label="操作" width="125" align="center" fixed="right">
@@ -128,8 +130,8 @@ export default {
         label: 'label'
       },
       enabledTypeOptions: [
-        { key: 'true', display_name: '激活' },
-        { key: 'false', display_name: '锁定' }
+        { key: 'enabled', display_name: '激活' },
+        { key: 'disabled', display_name: '锁定' }
       ]
     }
   },
@@ -155,7 +157,7 @@ export default {
       const blurry = query.blurry
       const enabled = query.enabled
       this.params = { page: this.page, size: this.size, sort: sort, deptId: this.deptId }
-      if (blurry) { this.params['blurry'] = blurry }
+      if (blurry) { this.params['queryValue'] = blurry }
       if (query.date) {
         this.params['startTime'] = query.date[0]
         this.params['endTime'] = query.date[1]
@@ -198,7 +200,6 @@ export default {
       if (this.deptName) { params['name'] = this.deptName }
       getDepts(params).then(res => {
         this.depts = res.data
-        console.log(this.depts)
       })
     },
     handleNodeClick(data) {
@@ -246,7 +247,7 @@ export default {
     },
     // 改变状态
     changeEnabled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.username + ', 是否继续？', '提示', {
+      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.loginName + ', 是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -258,11 +259,11 @@ export default {
             duration: 2500
           })
         }).catch(err => {
-          data.enabled = !data.enabled
+          data.status = data.status === 'enabled' ? 'disabled' : 'enabled'
           console.log(err.response.data.message)
         })
       }).catch(() => {
-        data.enabled = !data.enabled
+        data.status = data.status === 'enabled' ? 'disabled' : 'enabled'
       })
     }
   }

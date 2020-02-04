@@ -30,8 +30,8 @@
           <el-option
             v-for="(item, index) in roles"
             :disabled="level !== 1 && item.level <= level"
-            :key="item.name + index"
-            :label="item.name"
+            :key="item.roleName + index"
+            :label="item.roleName"
             :value="item.id"/>
         </el-select>
       </el-form-item>
@@ -176,7 +176,7 @@ export default {
     },
     getRoles() {
       getAll().then(res => {
-        this.roles = res
+        this.roles = res.data
       }).catch(err => {
         console.log(err.response.data.message)
       })
@@ -202,7 +202,7 @@ export default {
     },
     getRoleLevel() {
       getLevel().then(res => {
-        this.level = res.level
+        this.level = res.data
       }).catch(err => {
         console.log(err.response.data.message)
       })
