@@ -1,14 +1,14 @@
 <template>
   <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="isAdd ? '新增用户' : '编辑用户'" append-to-body width="570px">
     <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="form.username"/>
+      <el-form-item label="用户名" prop="loginName">
+        <el-input v-model="form.loginName"/>
       </el-form-item>
       <el-form-item label="状态" prop="enabled">
-        <el-radio v-for="item in dicts" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
+        <el-radio v-for="item in dicts" :key="item.id" v-model="form.status" :label="item.value">{{ item.label }}</el-radio>
       </el-form-item>
-      <el-form-item label="电话" prop="phone">
-        <el-input v-model.number="form.phone" />
+      <el-form-item label="手机号码" prop="mobilePhone">
+        <el-input v-model.number="form.mobilePhone" />
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="form.email" />
@@ -20,8 +20,8 @@
         <el-select v-model="jobId" style="width: 178px" placeholder="请先选择部门">
           <el-option
             v-for="(item, index) in jobs"
-            :key="item.name + index"
-            :label="item.name"
+            :key="item.jobName + index"
+            :label="item.jobName"
             :value="item.id"/>
         </el-select>
       </el-form-item>
@@ -66,7 +66,7 @@ export default {
   data() {
     const validPhone = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入电话号码'))
+        callback(new Error('请输入手机号码'))
       } else if (!this.isvalidPhone(value)) {
         callback(new Error('请输入正确的11位手机号码'))
       } else {
@@ -74,10 +74,11 @@ export default {
       }
     }
     return {
-      dialog: false, loading: false, form: { username: '', email: '', enabled: 'false', roles: [], job: { id: '' }, dept: { id: '' }, phone: null },
+      dialog: false, loading: false,
+      form: { loginName: '', email: '', status: 'disabled', roleIds: [], jobId: null, deptId: null, mobilePhone: null },
       roleIds: [], roles: [], depts: [], deptId: null, jobId: null, jobs: [], level: 3,
       rules: {
-        username: [
+        loginName: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
@@ -88,7 +89,7 @@ export default {
         phone: [
           { required: true, trigger: 'blur', validator: validPhone }
         ],
-        enabled: [
+        status: [
           { required: true, message: '状态不能为空', trigger: 'blur' }
         ]
       }
@@ -99,8 +100,8 @@ export default {
       this.resetForm()
     },
     doSubmit() {
-      this.form.dept.id = this.deptId
-      this.form.job.id = this.jobId
+      this.form.deptId = this.deptId
+      this.form.jobId = this.jobId
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.deptId === null || this.deptId === undefined) {
@@ -123,12 +124,13 @@ export default {
             this.form.roles = []
             const _this = this
             this.roleIds.forEach(function(data, index) {
-              const role = { id: data }
-              _this.form.roles.push(role)
+              _this.form.roleIds.push(data)
             })
             if (this.isAdd) {
               this.doAdd()
-            } else this.doEdit()
+            } else {
+              this.doEdit()
+            }
           }
         } else {
           return false
@@ -172,7 +174,7 @@ export default {
       this.deptId = null
       this.jobId = null
       this.roleIds = []
-      this.form = { username: '', email: '', enabled: 'false', roles: [], job: { id: '' }, dept: { id: '' }, phone: null }
+      this.form = { loginName: '', email: '', status: 'disabled', roleIds: [], jobId: null, deptId: null, mobilePhone: null }
     },
     getRoles() {
       getAll().then(res => {
@@ -183,14 +185,14 @@ export default {
     },
     getJobs(id) {
       getAllJob(id).then(res => {
-        this.jobs = res.content
+        this.jobs = res.data
       }).catch(err => {
         console.log(err.response.data.message)
       })
     },
     getDepts() {
       getDepts({ enabled: true }).then(res => {
-        this.depts = res.content
+        this.depts = res.data
       })
     },
     isvalidPhone(str) {

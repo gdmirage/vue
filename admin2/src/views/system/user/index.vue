@@ -236,12 +236,12 @@ export default {
       _this.getDepts()
       _this.getRoleLevel()
       _this.roleIds = []
-      _this.form = { id: data.id, username: data.username, phone: data.phone, email: data.email, enabled: data.enabled.toString(), roles: [], dept: { id: data.dept.id }, job: { id: data.job.id }}
-      data.roles.forEach(function(data, index) {
-        _this.roleIds.push(data.id)
+      _this.form = { id: data.id, loginName: data.loginName, mobilePhone: data.mobilePhone, email: data.email, status: data.status, roleIds: [], dept: data.deptId, job: data.jobId }
+      data.roleIds.forEach(function(data, index) {
+        _this.roleIds.push(data)
       })
-      _this.deptId = data.dept.id
-      _this.jobId = data.job.id
+      _this.deptId = data.deptId
+      _this.jobId = data.jobId
       _this.getJobs(_this.deptId)
       _this.dialog = true
     },

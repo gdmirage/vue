@@ -2,12 +2,10 @@ import request from '@/utils/request'
 
 export function getAllJob(deptId) {
   const params = {
-    deptId,
-    page: 0,
-    size: 9999
+    deptId
   }
   return request({
-    url: 'api/job',
+    url: 'api/permission/job/selectList',
     method: 'get',
     params
   })
